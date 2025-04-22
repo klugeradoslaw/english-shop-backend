@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.klugeradoslaw.backendshop.CartItem.CartItem;
+import pl.klugeradoslaw.backendshop.User.User;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,8 +20,8 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //@OneToOne
-    //private User user;
+    @OneToOne
+    private User user;
     @OneToMany
     private Set<CartItem> items;
     private LocalDateTime createdAt;
