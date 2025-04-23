@@ -6,7 +6,9 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
 
     <include file="changelog/0001_create_item_category_table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/0002_create_product_table.xml" relativeToChangelogFile="true"/>
 
-<!--    <include context="dev" file="db/testdata/item_category.sql"/>-->
+    <include context="dev" file="db/testdata/item_category.sql"/>
+    <include context="dev" file="db/testdata/product.sql"/>
 
 </databaseChangeLog>
