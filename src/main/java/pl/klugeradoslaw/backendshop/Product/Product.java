@@ -24,6 +24,7 @@ public class Product {
     private String description;
     private Double price;
     @ManyToOne
+    @JoinColumn(name = "item_category_id", referencedColumnName = "id")
     private ItemCategory itemCategory;
     private String photoUrl;
     private String fileUrl;

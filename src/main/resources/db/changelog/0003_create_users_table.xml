@@ -4,23 +4,26 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <preConditions onFail="WARN">
-        <not>
-            <tableExists tableName="item_category"/>
-        </not>
-    </preConditions>
-    <changeSet id="0001_create_item_category_table" author="klugeradoslaw">
-        <createTable tableName="item_category">
+    <changeSet id="0003_create_users_table" author="klugeradoslaw">
+        <createTable tableName="users">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="email" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar(200)">
+            <column name="password" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
-
+            <column name="user_role" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_at" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

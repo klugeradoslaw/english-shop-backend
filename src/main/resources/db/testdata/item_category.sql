@@ -9,4 +9,4 @@ VALUES
     ('Klasa 7.', 'Materiały przeznaczone dla uczniów 7. klasy szkoły podstawowej.'),
     ('Klasa 8.', 'Materiały przeznaczone dla uczniów 8. klasy szkoły podstawowej.'),
     ('Technikum/Liceum', 'Materiały przeznaczone dla uczniów szkół wyższych'),
-    ('Dla dorosłych', 'Materiały przeznaczone dla osób dorosłych.'),
+    ('Dla dorosłych', 'Materiały przeznaczone dla osób dorosłych.');

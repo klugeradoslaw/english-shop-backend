@@ -1,6 +1,7 @@
 package pl.klugeradoslaw.backendshop.User;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import pl.klugeradoslaw.backendshop.Order.Order;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
