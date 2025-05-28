@@ -1,27 +1,38 @@
 package pl.klugeradoslaw.backendshop.services;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.klugeradoslaw.backendshop.config.JwtConfig;
+import pl.klugeradoslaw.backendshop.entitites.User;
 
 import java.util.Date;
 
+@AllArgsConstructor
 @Service
 public class JwtService {
+    private final JwtConfig jwtConfig;
 
-    @Value("${spring.jwt.secret}")
-    private String secret;
+    public String generateAccessToken(User user) {
+        return generateToken(user, jwtConfig.getAccessTokenExpiration());
+    }
 
-    public String generateToken(String email) {
-        final long tokenExpiration = 86400; // 1 day
+    public String generateRefreshToken(User user) {
+        return generateToken(user, jwtConfig.getRefreshTokenExpiration());
+    }
+
+    private String generateToken(User user, long tokenExpiration) {
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getId().toString())
+                .claim("email", user.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(jwtConfig.getSecretKey())
                 .compact();
     }
 
@@ -36,13 +47,13 @@ public class JwtService {
 
 
 
-    public String getEmailFromToken(String token) {
-        return getClaims(token).getSubject();
+    public Long getUserIdFromToken(String token) {
+        return Long.valueOf(getClaims(token).getSubject());
     }
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

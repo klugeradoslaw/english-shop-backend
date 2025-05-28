@@ -26,3 +26,5 @@ spring:
       mode: never
   jwt:
     secret: ${JWT_SECRET}
+    accessTokenExpiration: 600 # 10min
+    refreshTokenExpiration: 604800 # 7 days
