@@ -19,6 +19,7 @@ import pl.klugeradoslaw.backendshop.dtos.UserLoginRequest;
 import pl.klugeradoslaw.backendshop.entitites.User;
 import pl.klugeradoslaw.backendshop.mappers.UserMapper;
 import pl.klugeradoslaw.backendshop.repositories.UserRepository;
+import pl.klugeradoslaw.backendshop.services.Jwt;
 import pl.klugeradoslaw.backendshop.services.JwtService;
 
 @RestController
@@ -40,25 +41,31 @@ public class AuthController {
                 ));
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+        Jwt accessToken = jwtService.generateAccessToken(user);
+        Jwt refreshToken = jwtService.generateRefreshToken(user);
 
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        Cookie cookie = new Cookie("refreshToken", refreshToken.toString());
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new JwtResponse(accessToken));
+        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
-    @PostMapping("/validate")
-    public boolean validate(@RequestHeader("Authorization") String authHeader) {
-        System.out.println("Validate called");
-        String token = authHeader.replace("Bearer ", "");
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponse> refresh(
+            @CookieValue(value = "refreshToken") String refreshToken
+    ) {
+        Jwt jwt = jwtService.parseToken(refreshToken);
+        if (jwt == null || jwt.isExpired()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userRepository.findById(jwt.getUserId()).orElseThrow();
+        Jwt accessToken = jwtService.generateAccessToken(user);
 
-        return jwtService.validateToken(token);
+        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
     @GetMapping("/me")
